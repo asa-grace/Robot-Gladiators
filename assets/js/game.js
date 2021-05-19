@@ -1,16 +1,13 @@
-var playerName = window.prompt("What is your robot's name?");
-var playerHealth = 100;
-var playerAttack = 10;
-var playerMoney = 10;
+/* Game Functions */
 
-// Log multiple values
-console.log(playerName, playerHealth, playerAttack);
+// function to generate a random numeric value
+var randomNumber = function(min, max) {
+    var value = Math.floor(Math.random() * (max - min + 1) + min);
 
-var enemyNames = ["Roberto", "The Clamps", "Bender"];
-var enemyHealth = 50;
-var enemyAttack = 12;
+    return value;
+};
 
-//create function
+//create function (with parameter for enemy's object holding name, health, and attack values)
 var fight = function(enemyName) {
     while(playerHealth > 0 && enemyHealth > 0) {
         // ask player to fight or run  
@@ -172,5 +169,60 @@ var shop = function() {
     }
 };
 
+/* End Game Functions */
+
+/* Game Info / Variables */
+var playerInfo = {
+    name: window.prompt("What is your robot's name?"),
+    health: 100,
+    attack: 10,
+    money: 10,
+    reset: function() {
+        this.health = 100;
+        this.money = 10;
+        this.attack = 10;
+    }, refillHealth: function() {
+        if (this.money >= 7) {
+            window.alert("Refilling player's health by 20 for 7 dollars.");
+            this.health += 20;
+            this.money -= 7;
+        } else {
+        window.alert("YOu don't have enough money!");
+        }
+    }, upgradeAttack: function() {
+        if (this.money >= 7) {
+            window.alert("Upgrading player's attack by 6 for 7 dollars");
+            this.attack += 6;
+            this.money -= 7;
+        } else {
+            window.alert("You don't have enough money!");
+        }
+    }
+};
+
+// enemy info
+var enemyInfo = [
+    {
+        name: 'Roborto',
+        attack: randomNumber(10, 14)
+    },
+    {
+        name: 'Amy Android',
+        attack: randomNumber(10, 14)
+    },
+    {
+        name: 'Robo Tumble',
+        attack: randomNumber(10, 14)
+    }
+];
+
+console.log(enemyInfo);
+console.log (enemyInfo[0]);
+console.log(enemyInfo[0].name);
+console.log(enemyInfo[0]['attack']);
+
+/* End Game Info / Variables */
+
+/* Run Game */
 // start first game when page loads
 startGame();
