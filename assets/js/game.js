@@ -32,9 +32,10 @@ var fight = function(enemyName) {
         }
         // if player picks skip, confirm and then stop the loop
         
-    
-        //remove enemy health
-        enemyHealth = enemyHealth - playerAttack;
+        // generate random damage value based on player's attack power
+        var damage = randomNumber(playerInfo.attack - 3, playerInfo.attack);
+
+        enemy.health = Math.max(0, enemy.health - damage);
         console.log(
             playerName + " attacked " + enemyName + ". " + enemyName + " now has " + enemyHealth + " health remaining."
         );
@@ -53,14 +54,17 @@ var fight = function(enemyName) {
         }
 
         // remove players health
-        playerHealth = playerHealth - enemyAttack;
+        var damage = randomNumber(enemy.attack - 3, enemy.attack);
+
+        playerInfoInfo.health = Math.max(0, playerInfo.health - damage);
+
         console.log (
             enemyName + " attacked " + playerName + ". " + playerName + " now has " + playerHealth + " health remaining."
         );
 
         //check players health
         if (playerHealth <=0) {
-            window.alert (playerName + " has died!");
+            window.alert (playerName + ' has died!');
             break;
         } else {
             window.alert(playerName + " still has " + playerHealth + " health left.");
@@ -71,27 +75,26 @@ var fight = function(enemyName) {
 // function to start a new game
 var startGame = function() {
     // reset player stats
-    playerHealth = 100;
-    playerAttack = 10;
-    playerMoney = 10;
-
+    playerInfo.reset();
 
     // fight each enemy-robot by looping over them and fighting them one at a time
     for(var i =0; enemyNames.length; i++) {
         // if player is still alive, keep fighting
-        if (playerHealth > 0) {
-
+        if (playerInfo.health > 0) {
             // let player know what round they ar in, remember arrays start at 0 so it needs to have 1 added
             window.alert('Welcome to Robot Gladiators! Round ' + (i + 1));
 
             // pick new enemy to fight based on the index of the enemyNames array
-            var pickedEnemyName = enemyNames[i];
+            var pickedEnemyObj = enemyInfo[i];
+
+            // set health for picked enemy
+            pickedEnemyObj.health = randomNumber(40,60);
 
             // reset enemyHealth before starting new fight
             enemyHealth = 50;
 
             // pass the pickedEnemyName variables value into the fight function
-            fight(pickedEnemyName);
+            fight(pickedEnemyObj);
 
             // if player is still alive and we're not at the last enemy
             if (playerHealth > 0 && i < enemyNames.length - 1) {
@@ -112,8 +115,12 @@ var startGame = function() {
         endGame();
 };
 
+// function to end entire game
 var endGame = function() {
-    if (playerHealth > 0) {
+    window.alert("The game has now ended. Let's see how you did!");
+
+    // if player is still alive, player wins
+    if (playerInfo.Health > 0) {
         window.alert("Great job, you've survived Robot Gladiators, You now have a score of " + playerMoney + '.');
     } else {
         window.alert("Thanks for playing, better luck next time!");
@@ -138,22 +145,12 @@ var shop = function() {
     switch (shopOptionPrompt) {
         case 'REFILL':
         case 'refill':
-            if (playerMoney >= 7) {
-                window.alert("Refilling player's health by 20 that'll be 7 dollars");
-
-                // increase health and decrease money
-                playerHealth = playerHealth + 20;
-                playerMoney = playerMoney - 7;
-            } else {
-                window.alert("You're Too broke, what a joke!");
-            } break;
+            playerInfo.refillHealth();
+            break;
         case 'UPGRADE':
         case 'upgrade':
-            if (playerMoney >= 7) {
-                window.alert("Upgrading player's attack by 6 that'll be 7 dollars");
-            } else {
-                window.alert("Dont waste my time, you dont have the money");
-            } break;
+            playerInfo.upgradeAttack();
+            break;
         case 'LEAVE':
         case 'leave':
             window.alert('Now leaving Botniks General Store');
