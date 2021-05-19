@@ -77,35 +77,42 @@ var startGame = function() {
     playerHealth = 100;
     playerAttack = 10;
     playerMoney = 10;
-}
 
-// fight each enemy-robot by looping over them and fighting them one at a time
-for(var i =0; enemyNames.length; i++) {
-    // if player is still alive, keep fighting
-    if (playerHealth > 0) {
 
-        // let player know what round they ar in, remember arrays start at 0 so it needs to have 1 added
-        window.alert('Welcome to Robot Gladiators! Round ' + (i + 1));
+    // fight each enemy-robot by looping over them and fighting them one at a time
+    for(var i =0; enemyNames.length; i++) {
+        // if player is still alive, keep fighting
+        if (playerHealth > 0) {
 
-        // pick new enemy to fight based on the index of the enemyNames array
-        var pickedEnemyName = enemyNames[i];
+            // let player know what round they ar in, remember arrays start at 0 so it needs to have 1 added
+            window.alert('Welcome to Robot Gladiators! Round ' + (i + 1));
 
-        // reset enemyHealth before starting new fight
-        enemyHealth = 50;
-        
-        // use debugger to pause script from running and check whats going on at that moment in code
-        // debugger;
+            // pick new enemy to fight based on the index of the enemyNames array
+            var pickedEnemyName = enemyNames[i];
 
-        // pass the pickedEnemyName variables value into the fight function
-        fight(pickedEnemyName);
+            // reset enemyHealth before starting new fight
+            enemyHealth = 50;
+
+            // pass the pickedEnemyName variables value into the fight function
+            fight(pickedEnemyName);
+
+            // if player is still alive and we're not at the last enemy
+            if (playerHealth > 0 && i < enemyNames.length - 1) {
+                // ask if player wants to use the store before nxt round
+                var storeConfirm = window.confirm("The fight is over, Would you like to visit the store before the next round?");
+
+                // if confirm take them to the store function
+                if (storeConfirm) {
+                    shop();
+                }
+            }
+        } else {
+            window.alert('You have lost your robot in battle! Game Over!');
+            break;
+        }
     }
-    // if player isnt alive, stop the game
-    else {
-        window.alert('You have lost your robot in battle! Game Over!')
-        break;
-    }
-
-    endGame();
+        // if player isnt alive, stop the game
+        endGame();
 };
 
 var endGame = function() {
@@ -126,3 +133,44 @@ var endGame = function() {
 };
 
 // Go to shop between battles
+var shop = function() {
+    // ask player what they'd like to do 
+    var shopOptionPrompt = window.prompt('Welcome to Botniks General Store! Would you like to REFILL your health, UPGRADE your attack, or LEAVE the store? Please enter one "REFILL", "UPGRADE", or "LEAVE" to make a choice.');
+
+    // Use switch case to carry out action
+    switch (shopOptionPrompt) {
+        case 'REFILL':
+        case 'refill':
+            if (playerMoney >= 7) {
+                window.alert("Refilling player's health by 20 that'll be 7 dollars");
+
+                // increase health and decrease money
+                playerHealth = playerHealth + 20;
+                playerMoney = playerMoney - 7;
+            } else {
+                window.alert("You're Too broke, what a joke!");
+            } break;
+        case 'UPGRADE':
+        case 'upgrade':
+            if (playerMoney >= 7) {
+                window.alert("Upgrading player's attack by 6 that'll be 7 dollars");
+            } else {
+                window.alert("Dont waste my time, you dont have the money");
+            } break;
+        case 'LEAVE':
+        case 'leave':
+            window.alert('Now leaving Botniks General Store');
+
+            //do nothing, so function will end
+            break;
+        default:
+            window.alert('You did not pick a valid option. Try again.');
+
+            // call shop() again to force player to pick a valid option
+            shop();
+            break;
+    }
+};
+
+// start first game when page loads
+startGame();
